@@ -1,5 +1,12 @@
 "use client";
-
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
