@@ -125,10 +125,19 @@ export default function Dashboard() {
           <p className="text-gray-400">Live Climate Intelligence Platform</p>
         </div>
 
-        <div className="text-left md:text-right">
-          <p className="text-green-400 font-semibold">● Live API Connected</p>
-          <p className="text-gray-400 text-sm">Updated: {data.updated}</p>
-        </div>
+<div className="text-left md:text-right bg-white/10 px-4 py-3 rounded-xl border border-gray-800">
+  <p className="text-green-400 font-semibold animate-pulse">
+    ● Live Climate Monitoring
+  </p>
+
+  <p className="text-gray-400 text-sm">
+    Updated: {data.updated}
+  </p>
+
+  <p className="text-blue-400 text-xs mt-1">
+    Open-Meteo Live Weather Feed
+  </p>
+</div>
       </div>
 
       <select
