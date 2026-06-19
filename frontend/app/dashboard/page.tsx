@@ -1,4 +1,7 @@
 "use client";
+
+import Link from "next/link";
+import { useEffect, useState } from "react";
 import {
   LineChart,
   Line,
@@ -7,8 +10,6 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import Link from "next/link";
-import { useEffect, useState } from "react";
 
 const locations = {
   "Andhra Pradesh": { city: "Vijayawada", lat: 16.51, lon: 80.64 },
@@ -39,17 +40,12 @@ const locations = {
   "Uttar Pradesh": { city: "Lucknow", lat: 26.84, lon: 80.95 },
   Uttarakhand: { city: "Dehradun", lat: 30.31, lon: 78.03 },
   "West Bengal": { city: "Kolkata", lat: 22.57, lon: 88.36 },
-
   Delhi: { city: "New Delhi", lat: 28.61, lon: 77.2 },
   Puducherry: { city: "Puducherry", lat: 11.94, lon: 79.81 },
   Chandigarh: { city: "Chandigarh", lat: 30.73, lon: 76.77 },
   Ladakh: { city: "Leh", lat: 34.15, lon: 77.57 },
   Lakshadweep: { city: "Kavaratti", lat: 10.57, lon: 72.64 },
-  "Andaman and Nicobar Islands": {
-    city: "Port Blair",
-    lat: 11.62,
-    lon: 92.72,
-  },
+  "Andaman and Nicobar Islands": { city: "Port Blair", lat: 11.62, lon: 92.72 },
   "Jammu and Kashmir": { city: "Srinagar", lat: 34.08, lon: 74.79 },
 };
 
@@ -111,6 +107,13 @@ export default function Dashboard() {
 
   const loc = locations[state as keyof typeof locations];
 
+  const chartData = [
+    { name: "Heatwave", value: data.heatwave },
+    { name: "Flood", value: data.flood },
+    { name: "Drought", value: data.drought },
+    { name: "Score", value: data.score },
+  ];
+
   return (
     <main className="min-h-screen bg-black text-white p-8">
       <Link href="/">
@@ -125,19 +128,15 @@ export default function Dashboard() {
           <p className="text-gray-400">Live Climate Intelligence Platform</p>
         </div>
 
-<div className="text-left md:text-right bg-white/10 px-4 py-3 rounded-xl border border-gray-800">
-  <p className="text-green-400 font-semibold animate-pulse">
-    ● Live Climate Monitoring
-  </p>
-
-  <p className="text-gray-400 text-sm">
-    Updated: {data.updated}
-  </p>
-
-  <p className="text-blue-400 text-xs mt-1">
-    Open-Meteo Live Weather Feed
-  </p>
-</div>
+        <div className="text-left md:text-right bg-white/10 px-4 py-3 rounded-xl border border-gray-800">
+          <p className="text-green-400 font-semibold animate-pulse">
+            ● Live Climate Monitoring
+          </p>
+          <p className="text-gray-400 text-sm">Updated: {data.updated}</p>
+          <p className="text-blue-400 text-xs mt-1">
+            Open-Meteo Live Weather Feed
+          </p>
+        </div>
       </div>
 
       <select
@@ -159,37 +158,32 @@ export default function Dashboard() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <RiskCard
-          title="Heatwave Risk"
-          value={data.heatwave}
-          color="text-red-400"
-        />
-        <RiskCard
-          title="Flood Risk"
-          value={data.flood}
-          color="text-blue-400"
-        />
-        <RiskCard
-          title="Drought Risk"
-          value={data.drought}
-          color="text-yellow-400"
-        />
-        <RiskCard
-          title="Climate Score"
-          value={data.score}
-          color="text-green-400"
-        />
+        <RiskCard title="Heatwave Risk" value={data.heatwave} color="text-red-400" />
+        <RiskCard title="Flood Risk" value={data.flood} color="text-blue-400" />
+        <RiskCard title="Drought Risk" value={data.drought} color="text-yellow-400" />
+        <RiskCard title="Climate Score" value={data.score} color="text-green-400" />
       </div>
 
       <div className="mt-10 bg-white/10 p-6 rounded-2xl border border-gray-800">
         <h2 className="text-2xl font-bold mb-4">AI Climate Insight</h2>
         <p className="text-gray-300">
           {state} currently records {data.temp}°C temperature, {data.humidity}%
-          humidity and {data.rain} mm rainfall. Based on current live
-          conditions, AURA estimates {data.heatwave}% heatwave risk,{" "}
-          {data.flood}% flood risk, {data.drought}% drought risk and an overall
-          climate score of {data.score}%.
+          humidity and {data.rain} mm rainfall. Based on current live conditions,
+          AURA estimates {data.heatwave}% heatwave risk, {data.flood}% flood risk,
+          {data.drought}% drought risk and an overall climate score of {data.score}%.
         </p>
+      </div>
+
+      <div className="mt-8 bg-white/10 p-6 rounded-2xl border border-gray-800">
+        <h2 className="text-2xl font-bold mb-4">Climate Risk Chart</h2>
+        <ResponsiveContainer width="100%" height={300}>
+          <LineChart data={chartData}>
+            <XAxis dataKey="name" />
+            <YAxis />
+            <Tooltip />
+            <Line type="monotone" dataKey="value" stroke="#38bdf8" strokeWidth={3} />
+          </LineChart>
+        </ResponsiveContainer>
       </div>
     </main>
   );
