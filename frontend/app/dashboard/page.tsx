@@ -63,6 +63,8 @@ export default function Dashboard() {
     updated: "",
   });
 
+  const [aiInsight, setAiInsight] = useState("AI insight loading...");
+
   useEffect(() => {
     fetchWeather();
   }, [state]);
@@ -100,8 +102,27 @@ export default function Dashboard() {
         score,
         updated: new Date().toLocaleTimeString(),
       });
+
+      const aiRes = await fetch("/api/gemini", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          state,
+          temp,
+          humidity,
+          rain,
+          heatwave,
+          flood,
+          drought,
+          score,
+        }),
+      });
+
+      const aiData = await aiRes.json();
+      setAiInsight(aiData.insight);
     } catch (error) {
       console.error("Weather fetch failed:", error);
+      setAiInsight("Unable to generate AI insight right now.");
     }
   };
 
@@ -134,7 +155,7 @@ export default function Dashboard() {
           </p>
           <p className="text-gray-400 text-sm">Updated: {data.updated}</p>
           <p className="text-blue-400 text-xs mt-1">
-            Open-Meteo Live Weather Feed
+            Open-Meteo + Gemini AI
           </p>
         </div>
       </div>
@@ -165,13 +186,8 @@ export default function Dashboard() {
       </div>
 
       <div className="mt-10 bg-white/10 p-6 rounded-2xl border border-gray-800">
-        <h2 className="text-2xl font-bold mb-4">AI Climate Insight</h2>
-        <p className="text-gray-300">
-          {state} currently records {data.temp}°C temperature, {data.humidity}%
-          humidity and {data.rain} mm rainfall. Based on current live conditions,
-          AURA estimates {data.heatwave}% heatwave risk, {data.flood}% flood risk,
-          {data.drought}% drought risk and an overall climate score of {data.score}%.
-        </p>
+        <h2 className="text-2xl font-bold mb-4">Gemini AI Climate Insight</h2>
+        <p className="text-gray-300 whitespace-pre-line">{aiInsight}</p>
       </div>
 
       <div className="mt-8 bg-white/10 p-6 rounded-2xl border border-gray-800">
@@ -185,7 +201,8 @@ export default function Dashboard() {
           </LineChart>
         </ResponsiveContainer>
       </div>
-            <div className="mt-8 bg-white/10 p-6 rounded-2xl border border-gray-800">
+
+      <div className="mt-8 bg-white/10 p-6 rounded-2xl border border-gray-800">
         <h2 className="text-2xl font-bold mb-4">India Climate Map</h2>
 
         <div className="h-80 rounded-2xl border border-gray-700 bg-gradient-to-br from-blue-950 via-black to-green-950 flex flex-col items-center justify-center text-center p-6">
@@ -214,31 +231,6 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
-      </div>
-            <div className="mt-8 bg-gradient-to-r from-blue-900/30 to-green-900/30 p-6 rounded-2xl border border-gray-800">
-        <h2 className="text-2xl font-bold mb-4">AI Climate Advisor</h2>
-
-        <p className="text-gray-300 mb-4">
-          Recommended actions for {state} based on current climate indicators:
-        </p>
-
-        <ul className="space-y-3 text-gray-300">
-          {data.heatwave > 60 && (
-            <li>🌡️ Increase public heatwave alerts and promote cooling shelters.</li>
-          )}
-
-          {data.flood > 50 && (
-            <li>🌊 Monitor low-lying areas and improve drainage preparedness.</li>
-          )}
-
-          {data.drought > 50 && (
-            <li>💧 Encourage water conservation and groundwater monitoring.</li>
-          )}
-
-          {data.score < 50 && (
-            <li>✅ Current climate risk is moderate. Continue regular monitoring.</li>
-          )}
-        </ul>
       </div>
     </main>
   );
