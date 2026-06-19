@@ -215,6 +215,31 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
+            <div className="mt-8 bg-gradient-to-r from-blue-900/30 to-green-900/30 p-6 rounded-2xl border border-gray-800">
+        <h2 className="text-2xl font-bold mb-4">AI Climate Advisor</h2>
+
+        <p className="text-gray-300 mb-4">
+          Recommended actions for {state} based on current climate indicators:
+        </p>
+
+        <ul className="space-y-3 text-gray-300">
+          {data.heatwave > 60 && (
+            <li>🌡️ Increase public heatwave alerts and promote cooling shelters.</li>
+          )}
+
+          {data.flood > 50 && (
+            <li>🌊 Monitor low-lying areas and improve drainage preparedness.</li>
+          )}
+
+          {data.drought > 50 && (
+            <li>💧 Encourage water conservation and groundwater monitoring.</li>
+          )}
+
+          {data.score < 50 && (
+            <li>✅ Current climate risk is moderate. Continue regular monitoring.</li>
+          )}
+        </ul>
+      </div>
     </main>
   );
 }
