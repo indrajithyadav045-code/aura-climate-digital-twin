@@ -185,6 +185,36 @@ export default function Dashboard() {
           </LineChart>
         </ResponsiveContainer>
       </div>
+            <div className="mt-8 bg-white/10 p-6 rounded-2xl border border-gray-800">
+        <h2 className="text-2xl font-bold mb-4">India Climate Map</h2>
+
+        <div className="h-80 rounded-2xl border border-gray-700 bg-gradient-to-br from-blue-950 via-black to-green-950 flex flex-col items-center justify-center text-center p-6">
+          <div className="text-6xl mb-4">🗺️</div>
+
+          <p className="text-xl font-semibold">{state}</p>
+
+          <p className="text-gray-400 mt-2">
+            Tracking climate indicators from {loc.city}
+          </p>
+
+          <div className="grid grid-cols-3 gap-4 mt-6 w-full max-w-xl">
+            <div className="bg-black/40 p-4 rounded-xl">
+              <p className="text-red-400 font-bold">{data.heatwave}%</p>
+              <p className="text-xs text-gray-400">Heat Risk</p>
+            </div>
+
+            <div className="bg-black/40 p-4 rounded-xl">
+              <p className="text-blue-400 font-bold">{data.flood}%</p>
+              <p className="text-xs text-gray-400">Flood Risk</p>
+            </div>
+
+            <div className="bg-black/40 p-4 rounded-xl">
+              <p className="text-yellow-400 font-bold">{data.drought}%</p>
+              <p className="text-xs text-gray-400">Drought Risk</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </main>
   );
 }
