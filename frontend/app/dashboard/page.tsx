@@ -193,6 +193,23 @@ export default function Dashboard() {
           <p className="text-xl font-semibold">{state}</p>
           <p className="text-gray-400 mt-2">
             Tracking climate indicators from {loc.city}
+                  <p className="text-gray-400 mb-8">Tracking location: {loc.city}</p>
+
+      <div className="mb-8 bg-gradient-to-r from-yellow-900/40 to-red-900/40 border border-yellow-700 p-5 rounded-2xl">
+        <h2 className="text-xl font-bold text-yellow-400">
+          ⚠ Climate Alert:{" "}
+          {data.score >= 70
+            ? "High Risk Detected"
+            : data.score >= 45
+            ? "Moderate Risk Detected"
+            : "Low Risk Condition"}
+        </h2>
+
+        <p className="text-gray-300 mt-2">
+          {state} is currently showing a climate score of {data.score}% based on
+          live temperature, rainfall and humidity indicators.
+        </p>
+      </div>
           </p>
 
           <div className="grid grid-cols-3 gap-4 mt-6 w-full max-w-xl">
