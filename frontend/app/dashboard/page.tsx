@@ -83,31 +83,29 @@ export default function Dashboard() {
       const humidity = weather.current.relative_humidity_2m ?? 0;
       const rain = weather.current.rain ?? 0;
 
-     const heatwave =
-  temp >= 45 ? 95 :
-  temp >= 40 ? 80 :
-  temp >= 35 ? 60 :
-  temp >= 30 ? 30 :
-  10;
+      const heatwave =
+        temp >= 45 ? 95 :
+        temp >= 40 ? 80 :
+        temp >= 35 ? 60 :
+        temp >= 30 ? 30 :
+        10;
 
-const flood =
-  rain >= 50 ? 95 :
-  rain >= 25 ? 75 :
-  rain >= 10 ? 50 :
-  rain >= 2 ? 25 :
-  5;
+      const flood =
+        rain >= 50 ? 95 :
+        rain >= 25 ? 75 :
+        rain >= 10 ? 50 :
+        rain >= 2 ? 25 :
+        5;
 
-const drought =
-  rain === 0 && temp > 38 ? 90 :
-  rain < 1 && temp > 35 ? 70 :
-  rain < 2 ? 40 :
-  10;
+      const drought =
+        rain === 0 && temp > 38 ? 90 :
+        rain < 1 && temp > 35 ? 70 :
+        rain < 2 ? 40 :
+        10;
 
-const score = Math.round(
-  heatwave * 0.4 +
-  flood * 0.3 +
-  drought * 0.3
-);
+      const score = Math.round(
+        heatwave * 0.4 + flood * 0.3 + drought * 0.3
+      );
 
       setData({
         temp,
@@ -177,6 +175,22 @@ const score = Math.round(
 
       <p className="text-gray-400 mb-8">Tracking location: {loc.city}</p>
 
+      <div className="mb-8 bg-gradient-to-r from-yellow-900/40 to-red-900/40 border border-yellow-700 p-5 rounded-2xl">
+        <h2 className="text-xl font-bold text-yellow-400">
+          ⚠ Climate Alert:{" "}
+          {data.score >= 75
+            ? "High Risk Detected"
+            : data.score >= 40
+            ? "Moderate Risk Detected"
+            : "Low Risk Condition"}
+        </h2>
+
+        <p className="text-gray-300 mt-2">
+          {state} is currently showing a climate score of {data.score}% based on
+          live temperature, rainfall and humidity indicators.
+        </p>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <InfoCard title="Temperature" value={`${data.temp}°C`} />
         <InfoCard title="Humidity" value={`${data.humidity}%`} />
@@ -202,35 +216,26 @@ const score = Math.round(
             <XAxis dataKey="name" />
             <YAxis />
             <Tooltip />
-            <Line type="monotone" dataKey="value" stroke="#38bdf8" strokeWidth={3} />
+            <Line
+              type="monotone"
+              dataKey="value"
+              stroke="#38bdf8"
+              strokeWidth={3}
+            />
           </LineChart>
         </ResponsiveContainer>
       </div>
 
       <div className="mt-8 bg-white/10 p-6 rounded-2xl border border-gray-800">
         <h2 className="text-2xl font-bold mb-4">India Climate Map</h2>
+
         <div className="h-80 rounded-2xl border border-gray-700 bg-gradient-to-br from-blue-950 via-black to-green-950 flex flex-col items-center justify-center text-center p-6">
           <div className="text-6xl mb-4">🗺️</div>
+
           <p className="text-xl font-semibold">{state}</p>
+
           <p className="text-gray-400 mt-2">
             Tracking climate indicators from {loc.city}
-                  <p className="text-gray-400 mb-8">Tracking location: {loc.city}</p>
-
-      <div className="mb-8 bg-gradient-to-r from-yellow-900/40 to-red-900/40 border border-yellow-700 p-5 rounded-2xl">
-        <h2 className="text-xl font-bold text-yellow-400">
-          ⚠ Climate Alert:{" "}
-          {data.score >= 75
-            ? "High Risk Detected"
-            : data.score >= 40
-            ? "Moderate Risk Detected"
-            : "Low Risk Condition"}
-        </h2>
-
-        <p className="text-gray-300 mt-2">
-          {state} is currently showing a climate score of {data.score}% based on
-          live temperature, rainfall and humidity indicators.
-        </p>
-      </div>
           </p>
 
           <div className="grid grid-cols-3 gap-4 mt-6 w-full max-w-xl">
@@ -275,7 +280,7 @@ const score = Math.round(
             value={
               data.score >= 75
                 ? "High Risk"
-              data.score >= 40
+                : data.score >= 40
                 ? "Moderate Risk"
                 : "Low Risk"
             }
@@ -322,7 +327,15 @@ function InfoCard({ title, value }: { title: string; value: string }) {
   );
 }
 
-function RiskCard({ title, value, color }: { title: string; value: number; color: string }) {
+function RiskCard({
+  title,
+  value,
+  color,
+}: {
+  title: string;
+  value: number;
+  color: string;
+}) {
   return (
     <div className="bg-white/10 p-6 rounded-2xl border border-gray-800">
       <h3 className="text-gray-400">{title}</h3>
@@ -331,7 +344,15 @@ function RiskCard({ title, value, color }: { title: string; value: number; color
   );
 }
 
-function MiniRisk({ label, value, color }: { label: string; value: number; color: string }) {
+function MiniRisk({
+  label,
+  value,
+  color,
+}: {
+  label: string;
+  value: number;
+  color: string;
+}) {
   return (
     <div className="bg-black/40 p-4 rounded-xl">
       <p className={`${color} font-bold`}>{value}%</p>
