@@ -83,13 +83,9 @@ export default function Dashboard() {
       const humidity = weather.current.relative_humidity_2m ?? 0;
       const rain = weather.current.rain ?? 0;
 
-      const heatwave =
-        temp > 40 ? 90 : temp > 35 ? 75 : temp > 30 ? 60 : 30;
-
+      const heatwave = temp > 40 ? 90 : temp > 35 ? 75 : temp > 30 ? 60 : 30;
       const flood = rain > 20 ? 90 : rain > 10 ? 70 : rain > 2 ? 50 : 20;
-
       const drought = rain < 1 && temp > 35 ? 80 : rain < 1 ? 60 : 25;
-
       const score = Math.round((heatwave + flood + drought) / 3);
 
       setData({
@@ -109,8 +105,7 @@ export default function Dashboard() {
 2. Flood Risk: ${flood}%. Monitor drainage systems, rainfall changes, and low-lying areas.
 3. Drought Risk: ${drought}%. Promote water conservation, groundwater monitoring, and reservoir planning.`
       );
-    } catch (error) {
-      console.error("Weather fetch failed:", error);
+    } catch {
       setAiInsight("Unable to generate climate insight right now.");
     }
   };
@@ -201,20 +196,9 @@ export default function Dashboard() {
           </p>
 
           <div className="grid grid-cols-3 gap-4 mt-6 w-full max-w-xl">
-            <div className="bg-black/40 p-4 rounded-xl">
-              <p className="text-red-400 font-bold">{data.heatwave}%</p>
-              <p className="text-xs text-gray-400">Heat Risk</p>
-            </div>
-
-            <div className="bg-black/40 p-4 rounded-xl">
-              <p className="text-blue-400 font-bold">{data.flood}%</p>
-              <p className="text-xs text-gray-400">Flood Risk</p>
-            </div>
-
-            <div className="bg-black/40 p-4 rounded-xl">
-              <p className="text-yellow-400 font-bold">{data.drought}%</p>
-              <p className="text-xs text-gray-400">Drought Risk</p>
-            </div>
+            <MiniRisk label="Heat Risk" value={data.heatwave} color="text-red-400" />
+            <MiniRisk label="Flood Risk" value={data.flood} color="text-blue-400" />
+            <MiniRisk label="Drought Risk" value={data.drought} color="text-yellow-400" />
           </div>
         </div>
       </div>
@@ -225,87 +209,71 @@ export default function Dashboard() {
           className="bg-green-600 hover:bg-green-700 px-6 py-3 rounded-xl font-semibold"
         >
           📄 Generate Climate Report
-       <div className="mt-8 bg-gradient-to-br from-slate-900 via-black to-blue-950 p-8 rounded-3xl border border-blue-800 shadow-2xl">
-  <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 border-b border-blue-800 pb-6 mb-6">
-    <div>
-      <h2 className="text-3xl font-bold text-blue-400">AURA Climate Intelligence Report</h2>
-      <p className="text-gray-400 mt-1">
-        AI-Powered Digital Twin of India's Climate
-      </p>
-    </div>
+        </button>
+      </div>
 
-    <div className="text-left md:text-right">
-      <p className="text-green-400 font-semibold">● Verified Live Data</p>
-      <p className="text-gray-400 text-sm">Generated: {data.updated}</p>
-    </div>
-  </div>
+      <div className="mt-8 bg-gradient-to-br from-slate-900 via-black to-blue-950 p-8 rounded-3xl border border-blue-800 shadow-2xl">
+        <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 border-b border-blue-800 pb-6 mb-6">
+          <div>
+            <h2 className="text-3xl font-bold text-blue-400">
+              AURA Climate Intelligence Report
+            </h2>
+            <p className="text-gray-400 mt-1">
+              AI-Powered Digital Twin of India&apos;s Climate
+            </p>
+          </div>
 
-  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-    <div className="bg-white/10 p-5 rounded-2xl border border-gray-800">
-      <p className="text-gray-400">State</p>
-      <h3 className="text-2xl font-bold">{state}</h3>
-    </div>
+          <div className="text-left md:text-right">
+            <p className="text-green-400 font-semibold">● Verified Live Data</p>
+            <p className="text-gray-400 text-sm">Generated: {data.updated}</p>
+          </div>
+        </div>
 
-    <div className="bg-white/10 p-5 rounded-2xl border border-gray-800">
-      <p className="text-gray-400">Tracking City</p>
-      <h3 className="text-2xl font-bold">{loc.city}</h3>
-    </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <ReportCard label="State" value={state} />
+          <ReportCard label="Tracking City" value={loc.city} />
+          <ReportCard
+            label="Climate Status"
+            value={
+              data.score >= 70
+                ? "High Risk"
+                : data.score >= 45
+                ? "Moderate Risk"
+                : "Low Risk"
+            }
+            special
+          />
+        </div>
 
-    <div className="bg-white/10 p-5 rounded-2xl border border-gray-800">
-      <p className="text-gray-400">Climate Status</p>
-      <h3 className="text-2xl font-bold text-yellow-400">
-        {data.score >= 70 ? "High Risk" : data.score >= 45 ? "Moderate Risk" : "Low Risk"}
-      </h3>
-    </div>
-  </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <ReportCard label="🌡 Temperature" value={`${data.temp}°C`} />
+          <ReportCard label="💧 Humidity" value={`${data.humidity}%`} />
+          <ReportCard label="🌧 Rainfall" value={`${data.rain} mm`} />
+        </div>
 
-  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-    <div className="bg-black/40 p-5 rounded-2xl">
-      <p className="text-gray-400">🌡 Temperature</p>
-      <h3 className="text-3xl font-bold">{data.temp}°C</h3>
-    </div>
+        <div className="bg-white/10 p-6 rounded-2xl border border-gray-800 mb-6">
+          <h3 className="text-xl font-bold mb-3">Executive Summary</h3>
+          <p className="text-gray-300">
+            AURA analyzed live weather indicators from {loc.city}, {state}. The
+            current climate score is {data.score}%, with heatwave risk at{" "}
+            {data.heatwave}%, flood risk at {data.flood}%, and drought risk at{" "}
+            {data.drought}%. This report supports climate monitoring, early
+            warning, and adaptation planning.
+          </p>
+        </div>
 
-    <div className="bg-black/40 p-5 rounded-2xl">
-      <p className="text-gray-400">💧 Humidity</p>
-      <h3 className="text-3xl font-bold">{data.humidity}%</h3>
-    </div>
+        <div className="bg-white/10 p-6 rounded-2xl border border-gray-800">
+          <h3 className="text-xl font-bold mb-3">Recommended Actions</h3>
+          <p className="text-gray-300 whitespace-pre-line">{aiInsight}</p>
+        </div>
 
-    <div className="bg-black/40 p-5 rounded-2xl">
-      <p className="text-gray-400">🌧 Rainfall</p>
-      <h3 className="text-3xl font-bold">{data.rain} mm</h3>
-    </div>
-  </div>
-
-  <div className="mb-8">
-    <h3 className="text-xl font-bold mb-4">Risk Assessment</h3>
-
-    <div className="space-y-4">
-      <Progress label="Heatwave Risk" value={data.heatwave} color="bg-red-500" />
-      <Progress label="Flood Risk" value={data.flood} color="bg-blue-500" />
-      <Progress label="Drought Risk" value={data.drought} color="bg-yellow-500" />
-      <Progress label="Overall Climate Score" value={data.score} color="bg-green-500" />
-    </div>
-  </div>
-
-  <div className="bg-white/10 p-6 rounded-2xl border border-gray-800 mb-6">
-    <h3 className="text-xl font-bold mb-3">Executive Summary</h3>
-    <p className="text-gray-300">
-      AURA analyzed live weather indicators from {loc.city}, {state}. The current
-      climate score is {data.score}%, with heatwave risk at {data.heatwave}%,
-      flood risk at {data.flood}%, and drought risk at {data.drought}%.
-      This report supports climate monitoring, early warning, and adaptation planning.
-    </p>
-  </div>
-
-  <div className="bg-white/10 p-6 rounded-2xl border border-gray-800">
-    <h3 className="text-xl font-bold mb-3">Recommended Actions</h3>
-    <p className="text-gray-300 whitespace-pre-line">{aiInsight}</p>
-  </div>
-
-  <div className="mt-8 border-t border-blue-800 pt-4 text-center text-gray-500 text-sm">
-    Generated by AURA Climate Digital Twin • TitanX Space Labs • ISRO BAH 2026
-  </div>
-</div>
+        <div className="mt-8 border-t border-blue-800 pt-4 text-center text-gray-500 text-sm">
+          Generated by AURA Climate Digital Twin • TitanX Space Labs • ISRO BAH 2026
+        </div>
+      </div>
+    </main>
+  );
+}
 
 function InfoCard({ title, value }: { title: string; value: string }) {
   return (
@@ -316,44 +284,39 @@ function InfoCard({ title, value }: { title: string; value: string }) {
   );
 }
 
-function RiskCard({
-  function Progress({
-  label,
-  value,
-  color,
-}: {
-  label: string;
-  value: number;
-  color: string;
-}) {
-  return (
-    <div>
-      <div className="flex justify-between mb-2">
-        <span className="text-gray-300">{label}</span>
-        <span className="font-bold">{value}%</span>
-      </div>
-
-      <div className="w-full bg-gray-800 rounded-full h-4 overflow-hidden">
-        <div
-          className={`${color} h-4 rounded-full`}
-          style={{ width: `${value}%` }}
-        ></div>
-      </div>
-    </div>
-  );
-}
-  title,
-  value,
-  color,
-}: {
-  title: string;
-  value: number;
-  color: string;
-}) {
+function RiskCard({ title, value, color }: { title: string; value: number; color: string }) {
   return (
     <div className="bg-white/10 p-6 rounded-2xl border border-gray-800">
       <h3 className="text-gray-400">{title}</h3>
       <p className={`text-4xl font-bold mt-2 ${color}`}>{value}%</p>
+    </div>
+  );
+}
+
+function MiniRisk({ label, value, color }: { label: string; value: number; color: string }) {
+  return (
+    <div className="bg-black/40 p-4 rounded-xl">
+      <p className={`${color} font-bold`}>{value}%</p>
+      <p className="text-xs text-gray-400">{label}</p>
+    </div>
+  );
+}
+
+function ReportCard({
+  label,
+  value,
+  special = false,
+}: {
+  label: string;
+  value: string;
+  special?: boolean;
+}) {
+  return (
+    <div className="bg-white/10 p-5 rounded-2xl border border-gray-800">
+      <p className="text-gray-400">{label}</p>
+      <h3 className={`text-2xl font-bold ${special ? "text-yellow-400" : ""}`}>
+        {value}
+      </h3>
     </div>
   );
 }
