@@ -1,4 +1,3 @@
-
 import Link from "next/link";
 
 export default function Home() {
@@ -10,7 +9,9 @@ export default function Home() {
       </nav>
 
       <section className="max-w-5xl mx-auto text-center">
-        <p className="text-blue-400 mb-4">ISRO Bharatiya Antariksh Hackathon 2026</p>
+        <p className="text-blue-400 mb-4">
+          ISRO Bharatiya Antariksh Hackathon 2026
+        </p>
 
         <h2 className="text-5xl md:text-7xl font-bold mb-6">
           India&apos;s AI Climate Digital Twin
@@ -65,8 +66,8 @@ export default function Home() {
 
           <p className="text-gray-300 max-w-3xl mx-auto">
             Powered by live weather feeds, climate analytics, AI advisory
-            systems and digital twin technology to support disaster preparedness,
-            climate adaptation and environmental decision making.
+            systems and digital twin technology to support disaster
+            preparedness, climate adaptation and environmental decision making.
           </p>
         </div>
       </section>
@@ -88,4 +89,3 @@ function Feature({
     </div>
   );
 }
-```
