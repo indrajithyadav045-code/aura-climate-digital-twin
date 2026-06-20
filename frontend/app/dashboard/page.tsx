@@ -221,7 +221,7 @@ const score = Math.round(
           ⚠ Climate Alert:{" "}
           {data.score >= 75
             ? "High Risk Detected"
-            : data.score >= 45
+            : data.score >= 40
             ? "Moderate Risk Detected"
             : "Low Risk Condition"}
         </h2>
