@@ -103,26 +103,15 @@ export default function Dashboard() {
         updated: new Date().toLocaleTimeString(),
       });
 
-      const aiRes = await fetch("/api/gemini", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          state,
-          temp,
-          humidity,
-          rain,
-          heatwave,
-          flood,
-          drought,
-          score,
-        }),
-      });
-
-      const aiData = await aiRes.json();
-      setAiInsight(aiData.insight);
+      setAiInsight(
+        `${state} climate advisory:
+1. Heatwave Risk: ${heatwave}%. Improve public heat alerts, hydration awareness, and cooling shelters.
+2. Flood Risk: ${flood}%. Monitor drainage systems, rainfall changes, and low-lying areas.
+3. Drought Risk: ${drought}%. Promote water conservation, groundwater monitoring, and reservoir planning.`
+      );
     } catch (error) {
       console.error("Weather fetch failed:", error);
-      setAiInsight("Unable to generate AI insight right now.");
+      setAiInsight("Unable to generate climate insight right now.");
     }
   };
 
@@ -155,7 +144,7 @@ export default function Dashboard() {
           </p>
           <p className="text-gray-400 text-sm">Updated: {data.updated}</p>
           <p className="text-blue-400 text-xs mt-1">
-            Open-Meteo + Gemini AI
+            Open-Meteo + AURA AI Advisor
           </p>
         </div>
       </div>
@@ -186,7 +175,7 @@ export default function Dashboard() {
       </div>
 
       <div className="mt-10 bg-white/10 p-6 rounded-2xl border border-gray-800">
-        <h2 className="text-2xl font-bold mb-4">Gemini AI Climate Insight</h2>
+        <h2 className="text-2xl font-bold mb-4">AURA AI Climate Insight</h2>
         <p className="text-gray-300 whitespace-pre-line">{aiInsight}</p>
       </div>
 
@@ -204,12 +193,9 @@ export default function Dashboard() {
 
       <div className="mt-8 bg-white/10 p-6 rounded-2xl border border-gray-800">
         <h2 className="text-2xl font-bold mb-4">India Climate Map</h2>
-
         <div className="h-80 rounded-2xl border border-gray-700 bg-gradient-to-br from-blue-950 via-black to-green-950 flex flex-col items-center justify-center text-center p-6">
           <div className="text-6xl mb-4">🗺️</div>
-
           <p className="text-xl font-semibold">{state}</p>
-
           <p className="text-gray-400 mt-2">
             Tracking climate indicators from {loc.city}
           </p>
@@ -230,6 +216,31 @@ export default function Dashboard() {
               <p className="text-xs text-gray-400">Drought Risk</p>
             </div>
           </div>
+        </div>
+      </div>
+
+      <div className="mt-8 flex justify-center">
+        <button
+          onClick={() => window.print()}
+          className="bg-green-600 hover:bg-green-700 px-6 py-3 rounded-xl font-semibold"
+        >
+          📄 Generate Climate Report
+        </button>
+      </div>
+
+      <div className="mt-8 bg-white/10 p-6 rounded-2xl border border-gray-800">
+        <h2 className="text-2xl font-bold mb-4">Climate Report</h2>
+
+        <div className="space-y-2 text-gray-300">
+          <p><strong>State:</strong> {state}</p>
+          <p><strong>City:</strong> {loc.city}</p>
+          <p><strong>Temperature:</strong> {data.temp}°C</p>
+          <p><strong>Humidity:</strong> {data.humidity}%</p>
+          <p><strong>Rainfall:</strong> {data.rain} mm</p>
+          <p><strong>Heatwave Risk:</strong> {data.heatwave}%</p>
+          <p><strong>Flood Risk:</strong> {data.flood}%</p>
+          <p><strong>Drought Risk:</strong> {data.drought}%</p>
+          <p><strong>Climate Score:</strong> {data.score}%</p>
         </div>
       </div>
     </main>
