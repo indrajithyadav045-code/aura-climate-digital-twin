@@ -83,10 +83,31 @@ export default function Dashboard() {
       const humidity = weather.current.relative_humidity_2m ?? 0;
       const rain = weather.current.rain ?? 0;
 
-      const heatwave = temp > 40 ? 90 : temp > 35 ? 75 : temp > 30 ? 60 : 30;
-      const flood = rain > 20 ? 90 : rain > 10 ? 70 : rain > 2 ? 50 : 20;
-      const drought = rain < 1 && temp > 35 ? 80 : rain < 1 ? 60 : 25;
-      const score = Math.round((heatwave + flood + drought) / 3);
+     const heatwave =
+  temp >= 45 ? 95 :
+  temp >= 40 ? 80 :
+  temp >= 35 ? 60 :
+  temp >= 30 ? 30 :
+  10;
+
+const flood =
+  rain >= 50 ? 95 :
+  rain >= 25 ? 75 :
+  rain >= 10 ? 50 :
+  rain >= 2 ? 25 :
+  5;
+
+const drought =
+  rain === 0 && temp > 38 ? 90 :
+  rain < 1 && temp > 35 ? 70 :
+  rain < 2 ? 40 :
+  10;
+
+const score = Math.round(
+  heatwave * 0.4 +
+  flood * 0.3 +
+  drought * 0.3
+);
 
       setData({
         temp,
@@ -198,7 +219,7 @@ export default function Dashboard() {
       <div className="mb-8 bg-gradient-to-r from-yellow-900/40 to-red-900/40 border border-yellow-700 p-5 rounded-2xl">
         <h2 className="text-xl font-bold text-yellow-400">
           ⚠ Climate Alert:{" "}
-          {data.score >= 70
+          {data.score >= 75
             ? "High Risk Detected"
             : data.score >= 45
             ? "Moderate Risk Detected"
@@ -252,9 +273,9 @@ export default function Dashboard() {
           <ReportCard
             label="Climate Status"
             value={
-              data.score >= 70
+              data.score >= 75
                 ? "High Risk"
-                : data.score >= 45
+              data.score >= 40
                 ? "Moderate Risk"
                 : "Low Risk"
             }
